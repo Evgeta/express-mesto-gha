@@ -24,3 +24,28 @@ module.exports.createUser =  (req, res) => {
       .then( user => res.send({ data: user }))
       .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
   }
+
+ module.exports.updateUserProfile = (req, res) => {
+
+    User.findByIdAndUpdate(req.user.id, req.body,
+      {
+        new: true, // обработчик then получит на вход обновлённую запись
+        runValidators: true, // данные будут валидированы перед изменением
+        upsert: true // если пользователь не найден, он будет создан
+    })
+      .then(user => res.send({ data: user }))
+      .catch(err => res.status(500).send({ message: 'Произошла ошибка' }))
+  };
+   
+
+module.exports.updateAvatar = (req, res) => {
+  User.findByIdAndUpdate(req.user.id, req.body, {
+    new: true, // обработчик then получит на вход обновлённую запись
+    runValidators: true, // данные будут валидированы перед изменением
+    upsert: true // если пользователь не найден, он будет создан
+  })
+  .then(user => res.send({ data: user }))
+  .catch(err => res.status(500).send({ message: 'Произошла ошибка' }))
+};
+
+
