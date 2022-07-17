@@ -3,12 +3,14 @@ const { getUsers, getUserById, createUser } = require('../controllers/users');
 
 
 // Получение всех всех пользователей
-router.get('/users', getUsers);
+router.get('/', getUsers);
 
 // Получение пользователя по _id
-router.get('/users/:userId', getUserById);
+router.get('/:userId', getUserById);
 
 //Создание пользователя
-router.post('/user', createUser);
+router.post('/', createUser);
+
+
 
 module.exports = router;

@@ -16,8 +16,10 @@ module.exports.getUserById = (req, res) => {
   
 
 module.exports.createUser =  (req, res) => {
+    console.log('body');
+    console.log(req.body);
     const { name, about, avatar } = req.body;
-  
+     
     User.create({ name, about, avatar })
       .then( user => res.send({ data: user }))
       .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
