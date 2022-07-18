@@ -16,17 +16,16 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(bodyParser.json());
 
-app.use('/users', require('./routes/users'));
-app.use('/cards', require('./routes/cards'));
-
 //временное решение для авторизации
 app.use((req, res, next) => {
   req.user = {
-    _id: '62d425fe70459283a4ac1c6d' // вставьте сюда _id созданного в предыдущем пункте пользователя
+    _id: '62d534ecb17d7ddf882d92d8' // вставьте сюда _id созданного в предыдущем пункте пользователя
   };
-
   next();
 });
+
+app.use('/users', require('./routes/users'));
+app.use('/cards', require('./routes/cards'));
 
 
 app.listen(PORT, () => {

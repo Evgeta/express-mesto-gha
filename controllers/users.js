@@ -1,53 +1,80 @@
 const User = require('../models/user');
 
+const { INCORRECT_DATA_ERROR_CODE,
+        NOT_FOUND_ERROR_CODE, 
+        DEFAULT_ERROR_CODE } = require('../errors/errors');
+
 const NotFoundError = require('../errors/NotFoundError');
 const IncorrectDataError = require('../errors/IncorrectDataError');
 const DefaultError = require('../errors/DefaultError');
 
-module.exports.getUsers =  (req, res) => {
+//получение всех пользователей
+module.exports.getUsers =  (req, res, next) => {
     User.find({})
         .then(users => res.send({ data: users }))
-        .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+        .catch(() => {
+          res.status(DEFAULT_ERROR_CODE).send({ "message": "Ошибка сервера" })
+       });
 }; 
 
+//получение пользователя по id
 module.exports.getUserById = (req, res) => {
-    User.findById(req.params.userId)
-      .then((user) => {
-           res.end(user);
-      })
-      .catch(() => res.status(404).send({ message: 'Пользователь не найден.' }));  
-  };
-  
-module.exports.createUser =  (req, res) => {
-    console.log('body');
-    console.log(req.body);
-    const { name, about, avatar } = req.body;
-     
-    User.create({ name, about, avatar })
-      .then( user => res.send({ data: user }))
-      .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
-  }
-
- module.exports.updateUserProfile = (req, res) => {
-    User.findByIdAndUpdate(req.user.id, req.body,
-      {
-        new: true, // обработчик then получит на вход обновлённую запись
-        runValidators: true, // данные будут валидированы перед изменением
-        upsert: true // если пользователь не найден, он будет создан
+  User.findById(req.params.userId)
+    .then((user) => {
+      if (!user) {
+        return res.status(NOT_FOUND_ERROR_CODE).send({ "message": "Запрашиваемый пользователь не найден" })}
+      else {return res.send(user);}
     })
-      .then(user => res.send({ data: user }))
-      .catch(err => res.status(500).send({ message: 'Произошла ошибка' }))
-  };
-   
-
-module.exports.updateAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.user.id, req.body, {
-    new: true, // обработчик then получит на вход обновлённую запись
-    runValidators: true, // данные будут валидированы перед изменением
-    upsert: true // если пользователь не найден, он будет создан
-  })
-  .then(user => res.send({ data: user }))
-  .catch(err => res.status(500).send({ message: 'Произошла ошибка' }))
+    .catch(() => {
+       res.status(DEFAULT_ERROR_CODE).send({ "message": "Ошибка сервера" })
+    });
 };
 
+module.exports.createUser = (req, res) => {
+  const { name, about, avatar } = req.body;
 
+  User.create({ name, about, avatar })
+    .then(user => res.send({ data: user }))
+    .catch(err => {
+      if (err.name === 'ValidationError')
+        return res.status(INCORRECT_DATA_ERROR_CODE).send({ "message": "В запросе переданы некорректные данные" })
+      return res.status(DEFAULT_ERROR_CODE).send({ "message": "Ошибка сервера" })
+    });
+}
+
+ module.exports.updateUserProfile = (req, res) => {
+    const { name, about } = req.body;
+    User.findByIdAndUpdate({ _id: req.user._id }, { name, about },
+      {
+        new: true, // обработчик then получит на вход обновлённую запись
+        runValidators: true // данные будут валидированы перед изменением        
+    })
+      .then((user) => {
+        if (!user) {
+          return res.status(NOT_FOUND_ERROR_CODE).send({ "message": "Запрашиваемый пользователь не найден" })}
+        else {return res.send({data: user});}
+       })
+       .catch(err => {
+        if (err.name === 'ValidationError')
+          return res.status(INCORRECT_DATA_ERROR_CODE).send({ "message": "В запросе переданы некорректные данные" })
+        return res.status(DEFAULT_ERROR_CODE).send({ "message": "Ошибка сервера" })
+      });
+  };
+   
+module.exports.updateAvatar = (req, res) => {
+  const { avatar } = req.body;
+  User.findByIdAndUpdate(req.user._id, { avatar }, {
+    new: true, // обработчик then получит на вход обновлённую запись
+    runValidators: true // данные будут валидированы перед изменением   
+  })
+  .then((user) => {
+    if (!user) {
+      return res.status(NOT_FOUND_ERROR_CODE).send({ "message": "Запрашиваемый пользователь не найден" })}
+    else {return res.send({data: user});}
+   })
+   .catch(err => {
+    if (err.name === 'ValidationError')
+      return res.status(INCORRECT_DATA_ERROR_CODE).send({ "message": "В запросе переданы некорректные данные" })
+    return res.status(DEFAULT_ERROR_CODE).send({ "message": "Ошибка сервера" })
+  });
+};
