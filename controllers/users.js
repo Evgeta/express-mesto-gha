@@ -14,7 +14,6 @@ module.exports.getUserById = (req, res) => {
       .catch(() => res.status(404).send({ message: 'Пользователь не найден.' }));  
   };
   
-
 module.exports.createUser =  (req, res) => {
     console.log('body');
     console.log(req.body);
@@ -26,7 +25,6 @@ module.exports.createUser =  (req, res) => {
   }
 
  module.exports.updateUserProfile = (req, res) => {
-
     User.findByIdAndUpdate(req.user.id, req.body,
       {
         new: true, // обработчик then получит на вход обновлённую запись
