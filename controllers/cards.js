@@ -1,4 +1,10 @@
-const { INCORRECT_DATA_ERROR_CODE, NOT_FOUND_ERROR_CODE, DEFAULT_ERROR_CODE} = require('../errors/errors')
+const { INCORRECT_DATA_ERROR_CODE,
+        NOT_FOUND_ERROR_CODE, 
+        DEFAULT_ERROR_CODE } = require('../errors/errors');
+
+const NotFoundError = require('../errors/NotFoundError');
+const IncorrectDataError = require('../errors/IncorrectDataError');
+const DefaultError = require('../errors/DefaultError');
 
 const Card = require('../models/card');
 
@@ -8,6 +14,11 @@ module.exports.getCards = (req, res) => {
     .then(cards => res.send({ data: cards }))
     .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
 };
+
+// return res.status(ERROR_CODE).send({
+//   "message": "Описание ошибки"
+// })
+
 
 //Создание карточки
 module.exports.createCard = (req, res) => {
