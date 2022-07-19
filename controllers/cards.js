@@ -47,14 +47,14 @@ module.exports.createCard = (req, res) => {
 
 // Удаление карточки по по id
 module.exports.deleteCardById = (req, res) => {
-  Card.findById(req.params.cardId)
+// Card.findById(req.params.cardId)
+  Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
         return res.status(NOT_FOUND_ERROR_CODE).send({
           message: 'Карточка с таким id не найдена',
         });
       }
-      card.remove();
       return card;
     })
     .then(() => res.send({
