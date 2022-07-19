@@ -31,7 +31,7 @@ module.exports.getUserById = (req, res) => {
       return res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') { return res.status(INCORRECT_DATA_ERROR_CODE).send({ message: 'В запросе переданы некорректные данные' }); }
+      if (err.name === 'CastError') { return res.status(INCORRECT_DATA_ERROR_CODE).send({ message: 'В запросе переданы некорректные данные id пользователя' }); }
       return res.status(DEFAULT_ERROR_CODE).send({
         message: 'Ошибка сервера',
       });

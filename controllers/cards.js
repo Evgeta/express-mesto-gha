@@ -20,7 +20,6 @@ module.exports.getCards = (req, res) => {
 };
 
 // Создание карточки
-
 module.exports.createCard = (req, res) => {
   const {
     name,
@@ -93,8 +92,8 @@ module.exports.likeCard = (req, res) => {
       return res.send(card);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(INCORRECT_DATA_ERROR_CODE).send({ message: 'В запросе переданы некорректные данные' });
+      if (err.name === 'CastError') {
+        return res.status(INCORRECT_DATA_ERROR_CODE).send({ message: 'В запросе переданы некорректные данные id карточки' });
       }
       return res.status(DEFAULT_ERROR_CODE).send({
         message: 'Ошибка сервера',
@@ -124,7 +123,7 @@ module.exports.dislikeCard = (req, res) => {
       return res.send(card);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         return res.status(INCORRECT_DATA_ERROR_CODE).send({ message: 'В запросе переданы некорректные данные' });
       }
       return res.status(DEFAULT_ERROR_CODE).send({
