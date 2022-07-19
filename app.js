@@ -2,6 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
+const {
+  NOT_FOUND_ERROR_CODE,
+} = require('./errors/errors');
+
 const app = express();
 
 // Слушаем 3000 порт
@@ -23,6 +27,10 @@ app.use((req, res, next) => {
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
+
+app.use((req, res) => {
+  res.status(NOT_FOUND_ERROR_CODE).send({ message: 'Страница не найдена' });
+});
 
 app.listen(PORT, () => {
   // console.log(`App listening on port ${PORT}`);
