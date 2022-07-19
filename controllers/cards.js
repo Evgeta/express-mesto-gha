@@ -87,9 +87,14 @@ module.exports.likeCard = (req, res) => {
       }
       return res.send(card);
     })
-    .catch(() => res.status(DEFAULT_ERROR_CODE).send({
-      message: 'Ошибка сервера',
-    }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(INCORRECT_DATA_ERROR_CODE).send({ message: 'В запросе переданы некорректные данные' });
+      }
+      return res.status(DEFAULT_ERROR_CODE).send({
+        message: 'Ошибка сервера',
+      });
+    });
 };
 
 // Убрать лайк с карточки
@@ -113,7 +118,12 @@ module.exports.dislikeCard = (req, res) => {
       }
       return res.send(card);
     })
-    .catch(() => res.status(DEFAULT_ERROR_CODE).send({
-      message: 'Ошибка сервера',
-    }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(INCORRECT_DATA_ERROR_CODE).send({ message: 'В запросе переданы некорректные данные' });
+      }
+      return res.status(DEFAULT_ERROR_CODE).send({
+        message: 'Ошибка сервера',
+      });
+    });
 };
