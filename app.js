@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 
 const {
@@ -19,19 +20,12 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(bodyParser.json());
 
-// временное решение для авторизации
-app.use((req, res, next) => {
-  req.user = {
-    _id: '62d534ecb17d7ddf882d92d8', // вставьте сюда _id созданного в предыдущем пункте пользователя
-  };
-  next();
-});
-
-app.use('/users', require('./routes/users'));
-app.use('/cards', require('./routes/cards'));
-
 app.post('/signin', login);
 app.post('/signup', createUser);
+
+app.use(auth); // нужно вернуть 401 при попытке обратиться к неавторизованномоу маршруту
+app.use('/users', require('./routes/users'));
+app.use('/cards', require('./routes/cards'));
 
 app.use((req, res) => {
   res.status(NOT_FOUND_ERROR_CODE).send({ message: 'Страница не найдена' });

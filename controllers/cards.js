@@ -54,6 +54,9 @@ module.exports.deleteCardById = (req, res) => {
           message: 'Карточка с таким id не найдена',
         });
       }
+      if (!card.owner.equals(req.user._id)) {
+        throw new Error('Нельзя удалить чужую карточку');
+      }
       return card;
     })
     .then(() => res.send({
