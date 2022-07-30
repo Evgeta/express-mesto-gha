@@ -4,10 +4,12 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
+const NotFoundError = require('./errors/NotFoundError');
+const errorHandler = require('./middlewares/errorHandler');
 
-const {
-  NOT_FOUND_ERROR_CODE,
-} = require('./errors/errors');
+// const {
+//   NOT_FOUND_ERROR_CODE,
+// } = require('./errors/errors');
 
 const app = express();
 
@@ -27,9 +29,12 @@ app.use(auth); // нужно вернуть 401 при попытке обрат
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.use((req, res) => {
-  res.status(NOT_FOUND_ERROR_CODE).send({ message: 'Страница не найдена' });
-});
+app.use(() => { throw new NotFoundError('Страница не найдена'); });
+// app.use((req, res) => {
+//   res.status(NOT_FOUND_ERROR_CODE).send({ message: 'Страница не найдена' });
+// });
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   // console.log(`App listening on port ${PORT}`);
