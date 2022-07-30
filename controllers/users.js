@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+
 const User = require('../models/user');
 
 const {
@@ -44,15 +46,24 @@ module.exports.createUser = (req, res) => {
     name,
     about,
     avatar,
+    email,
+    password,
   } = req.body;
 
-  User.create({
-    name,
-    about,
-    avatar,
-  })
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
     .then((user) => res.send({
-      data: user,
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      email: user.email,
+      _id: user._id,
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') { return res.status(INCORRECT_DATA_ERROR_CODE).send({ message: 'В запросе переданы некорректные данные' }); }
