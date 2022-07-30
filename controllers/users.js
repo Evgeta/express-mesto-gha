@@ -178,3 +178,23 @@ module.exports.login = (req, res) => {
         });
     });
 };
+
+module.exports.getUsersMe = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        return res.status(NOT_FOUND_ERROR_CODE).send({
+          message: 'Запрашиваемый пользователь не найден',
+        });
+      }
+      return res.send(user);
+    })
+    .catch((err) => {
+      // if (err.name === 'CastError') { return res.status(INCORRECT_DATA_ERROR_CODE)
+      // .send({ message: 'В запросе переданы некорректные данные id пользователя' }); }
+      // return res.status(DEFAULT_ERROR_CODE).send({
+      //   message: 'Ошибка сервера',
+      // });
+      next(err);
+    });
+};
