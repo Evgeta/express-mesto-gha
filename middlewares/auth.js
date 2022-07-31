@@ -1,5 +1,6 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 
 module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
@@ -9,7 +10,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, secret);
   } catch (err) {
-    return next(err); // нужно вернуть 401
+    return next(new UnauthorizedError('Для доступа к разделу необходима авторизация'));
   }
   req.user = payload;
   return next();
