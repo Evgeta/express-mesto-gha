@@ -13,18 +13,17 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 const { NODE_ENV, JWT_SECRET } = process.env;
 const secret = NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret';
 
-// const {
-//   INCORRECT_DATA_ERROR_CODE,
-//   NOT_FOUND_ERROR_CODE,
-//   DEFAULT_ERROR_CODE,
-// } = require('../errors/errors');
-
 // получение всех пользователей
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.send({
-      data: users,
-    }))
+    .then((users) => {
+      if (!users) {
+        return next(new NotFoundError('Пользователи не найдены'));
+      }
+      return res.status(200).send({
+        data: users,
+      });
+    })
     .catch((err) => {
       next(err);
     });
@@ -37,7 +36,7 @@ module.exports.getUserById = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Запрашиваемый пользователь не найден'));
       }
-      return res.send(user);
+      return res.status(200).send(user);
     })
     .catch((err) => {
       next(err);
@@ -174,14 +173,12 @@ module.exports.getUsersMe = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Запрашиваемый пользователь не найден'));
       }
-      return res.send(user);
+      return res.status(200).send(user);
     })
     .catch((err) => {
-      // if (err.name === 'CastError') { return res.status(INCORRECT_DATA_ERROR_CODE)
-      // .send({ message: 'В запросе переданы некорректные данные id пользователя' }); }
-      // return res.status(DEFAULT_ERROR_CODE).send({
-      //   message: 'Ошибка сервера',
-      // });
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new IncorrectDataError('В запросе переданы некорректные данные'));
+      }
       next(err);
     });
 };
