@@ -8,6 +8,7 @@ const User = require('../models/user');
 const IncorrectDataError = require('../errors/IncorrectDataError');
 const NotFoundError = require('../errors/NotFoundError');
 const UserExistsError = require('../errors/UserExistsError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 const secret = NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret';
@@ -139,16 +140,21 @@ module.exports.login = (req, res, next) => {
     email,
     password,
   } = req.body;
+
+  // if (!email || !password) {
+  //   return next(new IncorrectDataError('Email или пароль не указаны'));
+  // }
+
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
+        return next(new UnauthorizedError('Неправильные почта или пароль'));
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
             // хеши не совпали — отклоняем промис
-            return Promise.reject(new Error('Неправильные почта или пароль'));
+            return next(new UnauthorizedError('Неправильные почта или пароль'));
           }
           // аутентификация успешна
           const token = jwt.sign({ _id: 'd285e3dceed844f902650f40' }, secret, { expiresIn: '7d' });
