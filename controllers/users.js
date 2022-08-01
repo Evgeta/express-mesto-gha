@@ -95,7 +95,7 @@ module.exports.updateUserProfile = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Запрашиваемый пользователь не найден'));
       }
-      return res.send({
+      return res.status(200).send({
         data: user,
       });
     })
