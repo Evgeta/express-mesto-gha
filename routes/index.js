@@ -4,7 +4,6 @@ const auth = require('../middlewares/auth');
 
 const NotFoundError = require('../errors/NotFoundError');
 const { login, createUser } = require('../controllers/users');
-// const { Router } = require('express');
 
 const { linkRegEx } = require('../utils/regulars');
 

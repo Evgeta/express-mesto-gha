@@ -175,7 +175,7 @@ module.exports.getUsersMe = (req, res, next) => {
       return res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         next(new IncorrectDataError('В запросе переданы некорректные данные'));
       }
       next(err);
