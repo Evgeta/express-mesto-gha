@@ -19,7 +19,7 @@ module.exports.getUsers = (req, res, next) => {
       if (!users) {
         return next(new NotFoundError('Пользователи не найдены'));
       }
-      return res.status(200).send({
+      return res.send({
         data: users,
       });
     })
@@ -35,7 +35,7 @@ module.exports.getUserById = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Запрашиваемый пользователь не найден'));
       }
-      return res.status(200).send(user);
+      return res.send(user);
     })
     .catch((err) => {
       next(err);
@@ -95,7 +95,7 @@ module.exports.updateUserProfile = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Запрашиваемый пользователь не найден'));
       }
-      return res.status(200).send({
+      return res.send({
         data: user,
       });
     })
@@ -172,7 +172,7 @@ module.exports.getUsersMe = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Запрашиваемый пользователь не найден'));
       }
-      return res.status(200).send(user);
+      return res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
