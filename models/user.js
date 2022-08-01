@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema({
         return validator.isURL(avatar);
       },
       message: 'Необходимо ввести корректный URL',
-
     },
   },
   email: {
