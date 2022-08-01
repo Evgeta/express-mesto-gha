@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const ForbiddenDeleteError = require('../errors/ForbiddenDeleteError');
-
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
