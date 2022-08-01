@@ -5,7 +5,7 @@ class ForbiddenDeleteError extends Error {
     super(message);
     this.name = 'ForbiddenDeleteError';
     this.statusCode = FORBIDDEN_DELETE_ERROR_CODE;
-    this.message = 'В запросе переданы некорректные данные';
+    this.message = 'Нельзя удалить объект, созданный другим пользователем';
   }
 }
 

@@ -3,7 +3,6 @@ const router = require('express').Router();
 const {
   getUsers,
   getUserById,
-  // createUser,
   updateUserProfile,
   updateAvatar,
   getUsersMe,
@@ -22,9 +21,6 @@ router.get('/:userId', celebrate({
 
 // Получение информации о своем профиле
 router.get('/users/me', getUsersMe);
-
-// Создание пользователя
-// router.post('/', createUser);
 
 // обновление профиля пользователя
 router.patch('/me', celebrate({

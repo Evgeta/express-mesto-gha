@@ -4,12 +4,10 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
-// const DefaultError = require('../errors/DefaultError');
 const IncorrectDataError = require('../errors/IncorrectDataError');
 const NotFoundError = require('../errors/NotFoundError');
 const UserExistsError = require('../errors/UserExistsError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
-const ForbiddenDeleteError = require('../errors/ForbiddenDeleteError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 const secret = NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret';
