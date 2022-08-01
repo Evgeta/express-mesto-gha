@@ -152,7 +152,7 @@ module.exports.login = (req, res, next) => {
           }
           // аутентификация успешна
           const token = jwt.sign({
-            _id: 'd285e3dceed844f902650f40',
+            _id: user._id,
           }, secret, { expiresIn: '7d' });
           res.status(200);
           res.cookie('jwt', token, {
