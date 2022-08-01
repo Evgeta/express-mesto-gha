@@ -163,7 +163,8 @@ module.exports.login = (req, res, next) => {
           return res.send({ message: 'Вы успешно авторизовались.' });
         })
         .catch((err) => next(err));
-    });
+    })
+    .catch(next);
 };
 
 module.exports.getUsersMe = (req, res, next) => {
