@@ -168,7 +168,7 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.getUsersMe = (req, res, next) => {
-  User.findById(req.user._id)
+  User.findById(req.user.id)
     .then((user) => {
       if (!user) {
         return next(new NotFoundError('Запрашиваемый пользователь не найден'));
