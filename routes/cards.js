@@ -26,7 +26,11 @@ router.post(
 );
 
 // Удаление карточки по по id
-router.delete('/:cardId', deleteCardById);
+router.delete('/:cardId', celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string().required().hex().length(24),
+  }),
+}), deleteCardById);
 
 // Поставить лайк карточке
 router.put('/:cardId/likes', celebrate({
