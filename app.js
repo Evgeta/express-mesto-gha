@@ -2,8 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
-// const helmet = require('helmet');
+const helmet = require('helmet');
 const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./errors/NotFoundError');
@@ -20,7 +21,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 app.use(bodyParser.json());
-// app.use(helmet());
+app.use(cookieParser());
+app.use(helmet());
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
