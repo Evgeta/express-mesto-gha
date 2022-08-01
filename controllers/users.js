@@ -155,7 +155,6 @@ module.exports.login = (req, res, next) => {
             _id: user._id,
           }, secret, { expiresIn: '7d' });
           res.status(200);
-          console.log(token);
           res.cookie('jwt', token, {
             maxAge: 3600000,
             httpOnly: true,
@@ -167,11 +166,8 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.getUsersMe = (req, res, next) => {
-  // console.log(req);
-
-  req.user._id = '62e7acd261a4e503880e74de';
-
-  User.findById(req.user._id)
+  const { _id } = req.user;
+  User.findById(_id)
     .then((user) => {
       if (!user) {
         return next(new NotFoundError('Запрашиваемый пользователь не найден'));
