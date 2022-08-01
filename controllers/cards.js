@@ -54,11 +54,10 @@ module.exports.deleteCardById = (req, res, next) => {
       if (!card.owner.equals(req.user._id)) {
         return next(new ForbiddenDeleteError('Нельзя удалить карточку другого пользователя'));
       }
-      return card.remove();
+      return card.remove().then(() => res.send({
+        message: 'Карточка удалена',
+      }));
     })
-    .then(() => res.send({
-      message: 'Карточка удалена',
-    }))
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new IncorrectDataError('В запросе переданы некорректные данные'));

@@ -12,15 +12,15 @@ const { linkRegEx } = require('../utils/regulars');
 // Получение всех всех пользователей
 router.get('/', getUsers);
 
+// Получение информации о своем профиле
+router.get('/me', getUsersMe);
+
 // Получение пользователя по _id
 router.get('/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().required().hex().length(24),
   }),
 }), getUserById);
-
-// Получение информации о своем профиле
-router.get('/users/me', getUsersMe);
 
 // обновление профиля пользователя
 router.patch('/me', celebrate({
@@ -33,7 +33,7 @@ router.patch('/me', celebrate({
 // обновление аватара
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(linkRegEx),
+    avatar: Joi.required().string().pattern(linkRegEx),
   }),
 }), updateAvatar);
 
